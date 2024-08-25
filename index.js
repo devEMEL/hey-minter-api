@@ -19,8 +19,12 @@ mongoose.connect(DB_URI, {
     // console.log(con.connection);
     // console.log("DB connected successfully");
 })
-
+// chainId contractAddress name symbol creator createdAt price maxSupply imageURI
 const nftSchema = new mongoose.Schema({
+    chainId: {
+        type: Number,
+        required: true
+    },
     contractAddress: {
         type: String,
         required: true,
@@ -51,7 +55,7 @@ const nftSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    tokenURI: {
+    imageURI: {
         type: String,
         required: true
     }
@@ -59,14 +63,17 @@ const nftSchema = new mongoose.Schema({
 
 const NFT = mongoose.model("NFT", nftSchema);
 
-// "contractAddress": "caca",
+// "chainId": 111555,
+// "contractAddress": "caca56",
 // "name": "Dom",
 // "symbol": "D",
 // "creator": "ml",
 // "createdAt": 1234,
 // "price": 45,
 // "maxSupply": 123,
-// "tokenURI": "papa"
+// "imageURI": "papa"
+
+// chainId contractAddress name symbol creator createdAt price maxSupply imageURI
 
 
 
