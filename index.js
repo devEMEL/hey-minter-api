@@ -73,6 +73,7 @@ const NFT = mongoose.model("NFT", nftSchema);
 // "maxSupply": 123,
 // "imageURI": "papa"
 
+// Done
 // chainId contractAddress name symbol creator createdAt price maxSupply imageURI
 
 
@@ -194,3 +195,6 @@ app.post('/api/v1/nfts', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+// lfg
