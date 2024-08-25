@@ -3,12 +3,14 @@
 import express from 'express';
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
+import cors from "cors";
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors())
 
 const DB_URI = process.env.MONGODB_CONNECTION_STRING.replace("<db_password>", process.env.MONGODB_PASSWORD);
 
@@ -19,6 +21,7 @@ mongoose.connect(DB_URI, {
     // console.log(con.connection);
     // console.log("DB connected successfully");
 })
+
 // chainId contractAddress name symbol creator createdAt price maxSupply imageURI
 const nftSchema = new mongoose.Schema({
     chainId: {
