@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import mongoose from 'mongoose';
 import cors from "cors";
 
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -81,7 +82,9 @@ const NFT = mongoose.model("NFT", nftSchema);
 
 
 
-
+app.get("/", (req, res) => {
+    res.send("Express server working...")
+})
 
 // To get all NFTs
 app.get('/api/v1/nfts', async (req, res) => {
