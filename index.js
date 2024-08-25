@@ -1,4 +1,5 @@
 // server.js
+// ​http://127.0.0.1:8000/api/v1/nfts
 import express from 'express';
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
@@ -15,8 +16,8 @@ mongoose.connect(DB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(con => {
-    console.log(con.connection);
-    console.log("DB connected successfully");
+    // console.log(con.connection);
+    // console.log("DB connected successfully");
 })
 
 const nftSchema = new mongoose.Schema({
@@ -72,13 +73,13 @@ const NFT = mongoose.model("NFT", nftSchema);
 
 
 // To get all NFTs
-app.get('/api/v1/nfts', async(req, res) => {
+app.get('/api/v1/nfts', async (req, res) => {
 
 
     let queryObj = { ...req.query };
     let excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach(el => delete queryObj[el]);
-    
+
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
@@ -91,7 +92,7 @@ app.get('/api/v1/nfts', async(req, res) => {
 
         // QUERY THE DATABASE WITH queryObj;
         let query = NFT.find(queryObj);
-        
+
         //SORT, FILTER, PAGINATE ETC THE RESULT
 
         if (req.query.sort) {
@@ -103,13 +104,25 @@ app.get('/api/v1/nfts', async(req, res) => {
             query = query.sort("createdAt"); //ascending order
         }
 
-        // if (req.query.fields) {
+        if (req.query.fields) {
+            const fields = req.query.fields.split(",").join(" ");
+            query = query.select(fields);
+        } else {
+            query = query.select("-__v");
+        }
 
-        // }
+        // page=2&limit3, page 1,1-10, page 2,11-20,.....
+        const page = req.query.page * 1 || 1;
+        const limit = req.query.limit * 1 || 10;
+        const skip = (page - 1) * limit;
+        if (req.query.page) {
 
-        // if (req.query.page) {
 
-        // }
+            const newNFTs = await NFT.countDocuments();
+            if (skip >= newNFTs) throw new Error("This page does not exist");
+            query = query.skip(skip).limit(limit);
+
+        }
         const nfts = await query;
         console.log(nfts);
         res.status(200).json({
@@ -128,7 +141,7 @@ app.get('/api/v1/nfts', async(req, res) => {
 });
 
 // To get a single NFT by ID
-app.get('/api/v1/nfts/:id', async(req, res) => {
+app.get('/api/v1/nfts/:id', async (req, res) => {
 
     const nft = await NFT.findById(req.params.id);
     try {
@@ -147,7 +160,7 @@ app.get('/api/v1/nfts/:id', async(req, res) => {
 });
 
 // TO CREATE AN NFT
-app.post('/api/v1/nfts', async(req, res) => {
+app.post('/api/v1/nfts', async (req, res) => {
 
     const newNFT = await NFT.create(req.body);
     if (!newNFT || Object.keys(newNFT).length === 0) {
