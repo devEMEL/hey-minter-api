@@ -118,6 +118,7 @@ app.get('/api/v1/nfts', async (req, res) => {
             query = query.sort("createdAt"); //ascending order
         }
 
+
         if (req.query.fields) {
             const fields = req.query.fields.split(",").join(" ");
             query = query.select(fields);
@@ -129,6 +130,11 @@ app.get('/api/v1/nfts', async (req, res) => {
         const page = req.query.page * 1 || 1;
         const limit = req.query.limit * 1 || 10;
         const skip = (page - 1) * limit;
+
+        if (req.query.limit) {
+            query = query.limit(Number(req.query.limit));
+        }
+
         if (req.query.page) {
 
 
