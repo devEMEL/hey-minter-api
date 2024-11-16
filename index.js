@@ -91,7 +91,7 @@ app.get('/api/v1/nfts', async (req, res) => {
 
 
     let queryObj = { ...req.query };
-    let excludedFields = ["page", "sort", "limit", "fields"];
+    let excludedFields = ["page", "sort", "limit", "fields", "order"];
     excludedFields.forEach(el => delete queryObj[el]);
 
 
@@ -109,14 +109,34 @@ app.get('/api/v1/nfts', async (req, res) => {
 
         //SORT, FILTER, PAGINATE ETC THE RESULT
 
+        // if (req.query.sort) {
+        //     const sortBy = req.query.sort.split(",").join(" ");
+        //     console.log(sortBy)
+        //     query = query.sort(sortBy);
+
+        // } else {
+        //     query = query.sort("createdAt"); //ascending order
+        // }
+
+        // if (req.query.sort) {
+        //     const sortBy = req.query.sort.split(",").map(field => {
+        //         // Check if field already has a minus for descending
+        //         return field.startsWith('-') ? field : -${field}
+        //     }).join(" ");
+        //     console.log(sortBy);
+        //     query = query.sort(sortBy);
+        // } else {
+        //     query = query.sort("createdAt"); // Ascending order
+        // }
+
         if (req.query.sort) {
             const sortBy = req.query.sort.split(",").join(" ");
-            console.log(sortBy)
+            console.log(sortBy);
             query = query.sort(sortBy);
-
         } else {
-            query = query.sort("createdAt"); //ascending order
+            query = query.sort("-createdAt"); // Default to descending order if no sort query
         }
+
 
 
         if (req.query.fields) {
