@@ -129,8 +129,18 @@ app.get('/api/v1/nfts', async (req, res) => {
         //     query = query.sort("createdAt"); // Ascending order
         // }
 
+        // if (req.query.sort) {
+        //     const sortBy = req.query.sort.split(",").join(" ");
+        //     console.log(sortBy);
+        //     query = query.sort(sortBy);
+        // } else {
+        //     query = query.sort("-createdAt"); // Default to descending order if no sort query
+        // }
+
         if (req.query.sort) {
-            const sortBy = req.query.sort.split(",").join(" ");
+            // Determine the sorting order: ascending or descending
+            const order = req.query.order?.toLowerCase() === "desc" ? "-" : "";
+            const sortBy = req.query.sort.split(",").map(field => `${order}${field}`).join(" ");
             console.log(sortBy);
             query = query.sort(sortBy);
         } else {
